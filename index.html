@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style>
+	body,ul,li,a{
+		margin:0;
+		padding: 0;
+		list-style: none;
+		text-decoration:none; 
+	}
+
+	*{
+		box-sizing:border-box;
+	}
+	.box{
+		width:100%;
+		height: 500px;
+		border:2px solid #888;
+		overflow: hidden;
+	}
+	.box .inner{
+		width: 500%;
+		height:500px;
+		border:2px solid red;
+	}
+	.inner li{
+		width: 20%;
+		height: 100%;
+		float:left;
+		text-align: center;
+		font-size: 300px;
+	}
+	.inner li a{
+		color: #fff;
+	}
+	.inner li:nth-of-type(1){
+		background: yellow;
+	}
+	.inner li:nth-of-type(2){
+		background: pink;
+	}
+	.inner li:nth-of-type(3){
+		background: blue;
+	}
+	.inner li:nth-of-type(4){
+		background: #ffde45;
+	}
+	.inner li:nth-of-type(5){
+		background: green;
+	}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<ul class="inner">
+			<li>
+				<a href="javascript:;">1</a>
+			</li>
+			<li>
+				<a href="javascript:;">2</a>
+			</li>
+			<li>
+				<a href="javascript:;">3</a>
+			</li>
+			<li>
+				<a href="javascript:;">4</a>
+			</li>
+			<li>
+				<a href="javascript:;">5</a>
+			</li>
+		</ul>
+	</div>
+	<script>
+	var box=document.querySelector('.box');
+	var inner=box.querySelector('.inner');
+	// console.log(inner)
+	var innerli=inner.querySelectorAll('li');
+	//console.log(innerli)
+	var imgw=box.offsetWidth/2;
+	var imgws=box.offsetWidth;
+	// console.log(imgws)
+	//console.log(imgw)
+	var i=0;
+	var move=0;
+	var ist='ontouchstart' in window;
+	if(ist){
+		var mousedown='touchstart';
+		var mousemove='touchmove';
+		var mouseup='touchend';
+	}else{
+		var mousedown='mousedown';
+		var mousemove='mousemove';
+		var mouseup='mouseup';
+	}
+
+	inner.addEventListener(mousedown,function(e){
+		var time=e.timeStamp;
+		var yw;
+		if(e.preventDefault){
+					e.preventDefault();
+				}  
+ 				else{
+ 					e.returnValue=false; 
+ 				}	
+
+		e=ist?e.changedTouches[0]:e;
+		var anw=e.clientX;
+		function moves(e){
+			e=ist?e.changedTouches[0]:e;
+			var movew=e.clientX;
+			yw=movew-anw;
+			inner.style.transition="none"
+			inner.style.transform="translateX("+(yw+move)+"px)"
+		}
+
+		document.addEventListener(mousemove,moves)
+
+			function move2(e){
+			var movetime=e.timeStamp;
+			
+			//document.onmousemove=null
+			if(yw>0){//向右
+				
+				m(-1)
+			}else if(yw<0){
+				//alert(1)
+				m(1)
+			}
+			function m(a){
+				if(Math.abs(yw)>imgw||(movetime-time)<100 && Math.abs(yw)>30){
+					console.log(movetime-time)
+				i+=a;
+				if(i<0){
+					i=0;
+				}else if(i>innerli.length-1){
+					i=innerli.length-1
+				}
+				move=-i*imgws;
+				//console.log(Math.abs(yw))
+				inner.style.transition="transform 1s"
+				inner.style.transform="translateX("+move+"px)";
+				}else{
+					move=-i*imgws;
+					inner.style.transform="translateX("+move+"px)";
+				}
+
+			}
+			
+			
+			document.removeEventListener(mousemove,moves)
+			document.removeEventListener(mouseup,move2)
+			        
+		}
+
+		document.addEventListener(mouseup,move2)
+
+
+	
+				
+				
+
+
+	})
+	</script>
+</body>
+</html>
